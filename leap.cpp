@@ -79,9 +79,14 @@ void LeapEventListener::onFrame(const Controller& controller) {
 
 }
 
-int main(int argc, char ** argv) {
+int main() {
 	Controller controller;
 	LeapEventListener listener;
+
+	char filename[] = "read.tmp";
+	// if (int fifo = mkfifo(filename, S_IRWXU) != 0) {
+
+	// }
 
 	controller.addListener(listener);
 
