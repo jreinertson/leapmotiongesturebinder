@@ -1,5 +1,11 @@
 #include <iostream>
 #include "Leap.h"
+#include <stdio.h>
+#include <string.h>
+#include <ext/stdio_filebuf.h>
+#include <cstdlib>
+#include <unistd.h>
+#include <QtGui>
 
 using namespace Leap;
 
@@ -27,7 +33,7 @@ void LeapEventListener::onConnect(const Controller& controller) {
     controller.enableGesture(Gesture::TYPE_KEY_TAP);
 
     controller.config().setFloat("Gesture.Circle.MinRadius", 100);
-    controller.config().setFloat("Gesture.Circle.MinArc", 30);
+    controller.config().setFloat("Gesture.Circle.MinArc", 300);
     controller.config().setFloat("Gesture.Swipe.MinLength", 200);
     // controller.config().setFloat("Gesture.KeyTap.Min")
 
@@ -44,7 +50,13 @@ void handleSwipe(){
 }
 
 void handleTap(){
+	int pid;
 	std::cout << "TAP" << std::endl;
+	pid = fork();
+	if (pid == 0) {
+		execl("/usr/bin/chromium", NULL);
+	}
+
 }
 
 void handleCircle(){
@@ -79,21 +91,18 @@ void LeapEventListener::onFrame(const Controller& controller) {
 
 }
 
-int main() {
+int main(int argc, char ** argv) {
+
+	// controller setup
 	Controller controller;
 	LeapEventListener listener;
-
-	char filename[] = "read.tmp";
-	// if (int fifo = mkfifo(filename, S_IRWXU) != 0) {
-
-	// }
-
 	controller.addListener(listener);
 
 	// Keep process until enter
 	std::cout << "Press Enter to quit..." << std::endl;
     std::cin.get();
 
+    //close process
 	controller.removeListener(listener);
 
 	return 0;
